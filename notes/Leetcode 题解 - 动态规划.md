@@ -902,31 +902,28 @@ coins = [2], amount = 3
 return -1.
 ```
 
-题目描述：给一些面额的硬币，要求用这些硬币来组成给定面额的钱数，并且使得硬币数量最少。硬币可以重复使用。
+题目描述：给定不同面额的硬币 coins 和一个总金额 amount。求凑成总金额所需的最少的硬币数，硬币可以重复使用。
 
-- 物品：硬币
-- 物品大小：面额
-- 物品价值：数量
+此题为动态规划经典题目。用M(i)表示对于总金额i所需要的最少硬币数。给出问题的递推公式：
+   M(i) = min{M(i - j) | j in coins, M(j) >= 0} + 1;
 
-因为硬币可以重复使用，因此这是一个完全背包问题。完全背包只需要将 0-1 背包的逆序遍历 dp 数组改为正序遍历即可。
-
-```java
-public int coinChange(int[] coins, int amount) {
-    if (amount == 0 || coins == null) return 0;
-    int[] dp = new int[amount + 1];
-    for (int coin : coins) {
-        for (int i = coin; i <= amount; i++) { //将逆序遍历改为正序遍历
-            if (i == coin) {
-                dp[i] = 1;
-            } else if (dp[i] == 0 && dp[i - coin] != 0) {
-                dp[i] = dp[i - coin] + 1;
-
-            } else if (dp[i - coin] != 0) {
-                dp[i] = Math.min(dp[i], dp[i - coin] + 1);
-            }
-        }
-    }
-    return dp[amount] == 0 ? -1 : dp[amount];
+```C++
+ int coinChange(vector<int>& coins, int amount) {
+     vector<int> count(amount + 1, 0);
+     return dp(coins, amount, count);
+ }
+ int dp(const vector<int>& coins, int amount, vector<int>& count ) {
+     if (amount < 0) return -1;
+     if (amount == 0) return count[0] = 0;
+     if (count[amount] != 0) return count[amount];
+     int ans = INT_MAX;
+     for (const int& a : coins) {
+         int na = dp(coins, amount - a, count);
+         if (na != -1 && na < ans) 
+             ans = na + 1;
+     }
+     return count[amount] = (ans == INT_MAX) ? -1 : ans;
+ }
 }
 ```
 
