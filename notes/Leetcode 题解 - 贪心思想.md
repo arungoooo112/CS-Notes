@@ -135,22 +135,26 @@ Output:
 
 也是计算不重叠的区间个数，不过和 Non-overlapping Intervals 的区别在于，[1, 2] 和 [2, 3] 在本题中算是重叠区间。
 
-```java
-public int findMinArrowShots(int[][] points) {
-    if (points.length == 0) {
-        return 0;
-    }
-    Arrays.sort(points, Comparator.comparingInt(o -> o[1]));
-    int cnt = 1, end = points[0][1];
-    for (int i = 1; i < points.length; i++) {
-        if (points[i][0] <= end) {
-            continue;
-        }
-        cnt++;
-        end = points[i][1];
-    }
-    return cnt;
-}
+按区间右端点进行排序，从左向右遍历区间，当出现区间的左端点大于当前的右端点时，递增cnt，同时改变当前作为判定依据的右端点。
+
+```C++
+ int findMinArrowShots(vector<vector<int>>& points) {
+     if (points.size() == 0) return 0;
+     auto min = [](const vector<int>& l, const vector<int>& r) {
+         return l[1] < r[1];
+     };
+     sort(points.begin(), points.end(), min);
+
+     int cnt = 1;
+     int curr = points[0][1];
+     for (const auto& a : points) {
+         if (a[0] > curr) {
+             cnt++;
+             curr = a[1];
+         }
+     }
+     return cnt;
+ }
 ```
 
 ## 4. 根据身高和序号重组队列
