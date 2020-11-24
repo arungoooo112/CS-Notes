@@ -945,20 +945,17 @@ Explanation: there are four ways to make up the amount:
 
 完全背包问题，使用 dp 记录可达成目标的组合数目。
 
-```java
-public int change(int amount, int[] coins) {
-    if (coins == null) {
-        return 0;
-    }
-    int[] dp = new int[amount + 1];
-    dp[0] = 1;
-    for (int coin : coins) {
-        for (int i = coin; i <= amount; i++) {
-            dp[i] += dp[i - coin];
-        }
-    }
-    return dp[amount];
-}
+```c++
+ int change(int amount, vector<int>& coins) {
+     vector<int> dp(amount + 1, 0);
+     dp[0] = 1;            
+     for (const int& j : coins) {
+         for (int i = j; i <= amount; i++) {
+             dp[i] += dp[i - j];
+         }
+     }
+     return dp[amount];
+ }
 ```
 
 ### 6. 字符串按单词列表分割
