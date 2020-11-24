@@ -945,6 +945,8 @@ Explanation: there are four ways to make up the amount:
 
 完全背包问题，使用 dp 记录可达成目标的组合数目。
 
+用一枚新硬币对既有的组合数进行拓展
+
 ```c++
  int change(int amount, vector<int>& coins) {
      vector<int> dp(amount + 1, 0);
