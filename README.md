@@ -54,7 +54,7 @@
 - [Java 虚拟机](https://github.com/arungoooo112/CS-Notes/blob/master/notes/Java%20虚拟机.md)
 - [Java I/O](https://github.com/arungoooo112/CS-Notes/blob/master/notes/Java%20IO.md)
 
-## :bulb: 系统设计 
+## :bulb: 系统设计
 
 - [系统设计基础](https://github.com/arungoooo112/CS-Notes/blob/master/notes/系统设计基础.md)
 - [分布式](https://github.com/arungoooo112/CS-Notes/blob/master/notes/分布式.md)
