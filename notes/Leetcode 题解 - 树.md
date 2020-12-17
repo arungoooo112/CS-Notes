@@ -608,7 +608,7 @@ void dfs(TreeNode root) {
         }
         return ans;
     }
-}
+
 ```
 
 ### 2. 非递归实现二叉树的后序遍历
@@ -617,24 +617,57 @@ void dfs(TreeNode root) {
 
 [Leetcode](https://leetcode.com/problems/binary-tree-postorder-traversal/description/) / [力扣](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/description/)
 
+**由前序遍历修改得到后序遍历**
+
 前序遍历为 root -\> left -\> right，后序遍历为 left -\> right -\> root。可以修改前序遍历成为 root -\> right -\> left，那么这个顺序就和后序遍历正好相反。
 
-```java
-public List<Integer> postorderTraversal(TreeNode root) {
-    List<Integer> ret = new ArrayList<>();
-    Stack<TreeNode> stack = new Stack<>();
-    stack.push(root);
-    while (!stack.isEmpty()) {
-        TreeNode node = stack.pop();
-        if (node == null) continue;
-        ret.add(node.val);
-        stack.push(node.left);
-        stack.push(node.right);
+```c++
+    vector<int> postorderTraversal(TreeNode* root) {
+        if (!root) return {};
+        vector<int> ans;
+        stack<TreeNode*> stack({root});
+        while (!stack.empty()) {
+            auto cur = stack.top(); stack.pop();
+            ans.push_back(cur->val);
+            if (cur->left) 
+                stack.push(cur->left);
+            if (cur->right) 
+                stack.push(cur->right);
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
     }
-    Collections.reverse(ret);
-    return ret;
-}
 ```
+
+**后序遍历的直接法**
+
+在后序遍历的非递归算法中，每个节点将被访问两次，这意味着，遍历完左子树之后我们需要访问当前节点，遍历完右子树之后我们也需要访问当前节点。在第二次访问当前节点时，我们才需要对当前节点实施操作。这就存在一个问题：当我们返回到当前节时，我们如何判断是遍历完左子树返回的还是遍历玩右子树返回的。
+我们用遍历prev记录上一个被访问的节点，用curr表示当前节点。当prev是curr的父节点时，继续向左下遍历入栈，知道为叶子节点时，打印pop。当prev是curr的左子节点时，从左子树向上返回，开始遍历右子树。当prev是curr的右子节点时，从右子树向上返回，打印pop。最后需要更新prev = curr。
+
+~~~c++
+    vector<int> postorderTraversal(TreeNode* root) {
+        if (root == nullptr) return {};
+        vector<int> ans;
+        stack<TreeNode*> stack({root});
+        TreeNode* prev = nullptr;
+        while (!stack.empty()) {
+            TreeNode* curr = stack.top();
+            if (!prev || prev->left == curr || prev->right == curr) {
+                if (curr->left) stack.push(curr->left);
+                else if (curr->right) stack.push(curr->right);
+            }
+            else if (curr->left == prev) {
+                if (curr->right) stack.push(curr->right);
+            }
+            else {
+                ans.push_back(curr->val);
+                stack.pop();
+            }
+            prev = curr;
+        }
+        return ans;
+    }
+~~~
 
 ### 3. 非递归实现二叉树的中序遍历
 
