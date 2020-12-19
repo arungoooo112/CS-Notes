@@ -391,24 +391,23 @@ private boolean isLeaf(TreeNode node){
 
 Output : 2
 ```
+我们可以先考虑以某一节点为起点，求其向下探的最长同值路径，给出递推公式：***L(r) = max(L(r.left), L(r.right)), if 父子节点同值***，观察递推公式，我们可以利用其中以左右子节点为起点的最长同值路径求出所有值的最长同值路径，最后比较所有值的相应长度取最大值即为所求。
 
-```java
-private int path = 0;
-
-public int longestUnivaluePath(TreeNode root) {
-    dfs(root);
-    return path;
-}
-
-private int dfs(TreeNode root){
-    if (root == null) return 0;
-    int left = dfs(root.left);
-    int right = dfs(root.right);
-    int leftPath = root.left != null && root.left.val == root.val ? left + 1 : 0;
-    int rightPath = root.right != null && root.right.val == root.val ? right + 1 : 0;
-    path = Math.max(path, leftPath + rightPath);
-    return Math.max(leftPath, rightPath);
-}
+```c++
+    int dfs(TreeNode* root, int& path) {
+        if (root == nullptr) return 0;
+        int left = dfs(root->left, path);
+        int right = dfs(root->right, path);
+        root->left  && root->left ->val == root->val ? left++ : left = 0;
+        root->right && root->right->val == root->val ? right++ : right = 0;
+        path = max(path, left + right);
+        return max(left, right);
+    }
+    int longestUnivaluePath(TreeNode* root) {
+        int path = 0;
+        dfs(root, path);
+        return path;
+    }
 ```
 
 ### 13. 间隔遍历
