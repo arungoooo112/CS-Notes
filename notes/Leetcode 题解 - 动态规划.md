@@ -16,8 +16,8 @@
   - [分割整数](#分割整数)
     - [1. 分割整数后的最大乘积](#1-分割整数后的最大乘积)
     - [2. **按平方数来分割整数后的最少个数**](#2-按平方数来分割整数后的最少个数)
-    - [2. **二进制字符串数组中一和零总个数满足条件的最大子集数**](#2-二进制字符串数组中一和零总个数满足条件的最大子集数)
-    - [3. 分割整数构成字母字符串](#3-分割整数构成字母字符串)
+    - [3. **二进制字符串数组中一和零总个数满足条件的最大子集数**](#3-二进制字符串数组中一和零总个数满足条件的最大子集数)
+    - [4. **整数字符串解码个数**](#4-整数字符串解码个数)
   - [最长递增子序列](#最长递增子序列)
     - [1. 最长递增子序列](#1-最长递增子序列)
     - [2. 一组整数对能够构成的最长链](#2-一组整数对能够构成的最长链)
@@ -395,7 +395,7 @@ private List<Integer> generateSquareList(int n) {
     return squareList;
 }
 ```
-### 2. **二进制字符串数组中一和零总个数满足条件的最大子集数**
+### 3. **二进制字符串数组中一和零总个数满足条件的最大子集数**
 
 474\. Perfect Squares(Medium)
 
@@ -421,7 +421,7 @@ int findMaxForm(vector<string>& strs, int m, int n) {
 }
 }
 ```
-### 3. 分割整数构成字母字符串
+### 4. **整数字符串解码个数**
 
 91\. Decode Ways (Medium)
 
@@ -429,27 +429,20 @@ int findMaxForm(vector<string>& strs, int m, int n) {
 
 题目描述：Given encoded message "12", it could be decoded as "AB" (1 2) or "L" (12).
 
-```java
-public int numDecodings(String s) {
-    if (s == null || s.length() == 0) {
-        return 0;
-    }
-    int n = s.length();
-    int[] dp = new int[n + 1];
-    dp[0] = 1;
-    dp[1] = s.charAt(0) == '0' ? 0 : 1;
+```c++
+int numDecodings(string s) {
+    if (s[0] == '0') return 0;
+    auto is_1To26 = [](char c1, char c2) {
+        if (c1 == '1') return true;
+        if (c1 == '2') return c2 >= '0' && c2 <= '6';
+        return false;
+    };
+    int n = s.size();
+    vector<int> dp(n + 1);
+    dp[0] = 1; dp[1] = 1;
     for (int i = 2; i <= n; i++) {
-        int one = Integer.valueOf(s.substring(i - 1, i));
-        if (one != 0) {
-            dp[i] += dp[i - 1];
-        }
-        if (s.charAt(i - 2) == '0') {
-            continue;
-        }
-        int two = Integer.valueOf(s.substring(i - 2, i));
-        if (two <= 26) {
-            dp[i] += dp[i - 2];
-        }
+        dp[i] = (s[i-1] != '0'            ? dp[i-1] : 0)
+                + (is_1To26(s[i-2], s[i-1]) ? dp[i-2] : 0);
     }
     return dp[n];
 }
