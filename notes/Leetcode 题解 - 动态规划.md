@@ -4,18 +4,19 @@
   - [斐波那契数列](#斐波那契数列)
     - [1. **爬楼梯**](#1-爬楼梯)
     - [2. **强盗抢劫**](#2-强盗抢劫)
-    - [3. 强盗在环形街区抢劫](#3-强盗在环形街区抢劫)
-    - [4. 信件错排](#4-信件错排)
-    - [5. 母牛生产](#5-母牛生产)
+    - [3. **强盗在环形街区抢劫**](#3-强盗在环形街区抢劫)
+    - [4. **信件错排**](#4-信件错排)
+    - [5. **母牛生产**](#5-母牛生产)
   - [矩阵路径](#矩阵路径)
-    - [1. 矩阵的最小路径和](#1-矩阵的最小路径和)
-    - [2. 矩阵的总路径数](#2-矩阵的总路径数)
+    - [1. **矩阵的最小路径和**](#1-矩阵的最小路径和)
+    - [2. **矩阵的总路径数**](#2-矩阵的总路径数)
   - [数组区间](#数组区间)
-    - [1. 数组区间和](#1-数组区间和)
-    - [2. 数组中等差递增子区间的个数](#2-数组中等差递增子区间的个数)
+    - [1. **数组区间和**](#1-数组区间和)
+    - [2. **数组中连续等差递增子区间的个数**](#2-数组中连续等差递增子区间的个数)
   - [分割整数](#分割整数)
-    - [1. 分割整数的最大乘积](#1-分割整数的最大乘积)
-    - [2. 按平方数来分割整数](#2-按平方数来分割整数)
+    - [1. 分割整数后的最大乘积](#1-分割整数后的最大乘积)
+    - [2. **按平方数来分割整数后的最少个数**](#2-按平方数来分割整数后的最少个数)
+    - [2. **二进制字符串数组中一和零总个数满足条件的最大子集数**](#2-二进制字符串数组中一和零总个数满足条件的最大子集数)
     - [3. 分割整数构成字母字符串](#3-分割整数构成字母字符串)
   - [最长递增子序列](#最长递增子序列)
     - [1. 最长递增子序列](#1-最长递增子序列)
@@ -92,48 +93,46 @@ int climbStairs(int n) {
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/2de794ca-aa7b-48f3-a556-a0e2708cb976.jpg" width="350px"> </div><br>
 
-```java
-public int rob(int[] nums) {
-    int pre2 = 0, pre1 = 0;
-    for (int i = 0; i < nums.length; i++) {
-        int cur = Math.max(pre2 + nums[i], pre1);
-        pre2 = pre1;
-        pre1 = cur;
+```c++
+int rob(vector<int>& nums) {
+    int n = nums.size();
+    if (n == 0) return 0;
+    if (n == 1) return nums[0];
+    vector<int> dp(n);
+    dp[0] = nums[0];
+    dp[1] = max(nums[0], nums[1]);
+    for (int i = 2; i < n; i++) {
+        dp[i] = max(dp[i - 1], dp[i - 2] + nums[i]);
     }
-    return pre1;
+    return dp[n-1];
 }
 ```
 
-### 3. 强盗在环形街区抢劫
+### 3. **强盗在环形街区抢劫**
 
 213\. House Robber II (Medium)
 
 [Leetcode](https://leetcode.com/problems/house-robber-ii/description/) / [力扣](https://leetcode-cn.com/problems/house-robber-ii/description/)
 
-```java
-public int rob(int[] nums) {
-    if (nums == null || nums.length == 0) {
-        return 0;
-    }
-    int n = nums.length;
-    if (n == 1) {
-        return nums[0];
-    }
-    return Math.max(rob(nums, 0, n - 2), rob(nums, 1, n - 1));
+```c++
+int rob(vector<int>& nums) {
+    int n = nums.size();
+    if (n == 0) return 0;
+    if (n == 1) return nums[0];
+    return max(rob1(nums, 0, n - 1), rob1(nums, 1, n));
 }
 
-private int rob(int[] nums, int first, int last) {
-    int pre2 = 0, pre1 = 0;
-    for (int i = first; i <= last; i++) {
-        int cur = Math.max(pre1, pre2 + nums[i]);
-        pre2 = pre1;
-        pre1 = cur;
+int rob1(vector<int>& nums, int first, int last) {
+    int pre1 = 0, pre2 = 0, curr = 0;
+    for (int i = first; i < last; ++i) {
+        curr = max(pre1 + nums[i], pre2);
+        pre1 = pre2; pre2 = curr;
     }
-    return pre1;
+    return curr;
 }
 ```
 
-### 4. 信件错排
+### 4. **信件错排**
 
 题目描述：有 N 个 信 和 信封，它们被打乱，求错误装信方式的数量。
 
@@ -148,7 +147,7 @@ private int rob(int[] nums, int first, int last) {
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/da1f96b9-fd4d-44ca-8925-fb14c5733388.png" width="350px"> </div><br>
 
-### 5. 母牛生产
+### 5. **母牛生产**
 
 [程序员代码面试指南-P181](#)
 
@@ -162,7 +161,7 @@ private int rob(int[] nums, int first, int last) {
 
 ## 矩阵路径
 
-### 1. 矩阵的最小路径和
+### 1. **矩阵的最小路径和**
 
 64\. Minimum Path Sum (Medium)
 
@@ -200,7 +199,7 @@ public int minPathSum(int[][] grid) {
 }
 ```
 
-### 2. 矩阵的总路径数
+### 2. **矩阵的总路径数**
 
 62\. Unique Paths (Medium)
 
@@ -239,7 +238,7 @@ public int uniquePaths(int m, int n) {
 
 ## 数组区间
 
-### 1. 数组区间和
+### 1. **数组区间和**
 
 303\. Range Sum Query - Immutable (Easy)
 
@@ -273,7 +272,7 @@ class NumArray {
 }
 ```
 
-### 2. 数组中等差递增子区间的个数
+### 2. **数组中连续等差递增子区间的个数**
 
 413\. Arithmetic Slices (Medium)
 
@@ -334,13 +333,17 @@ public int numberOfArithmeticSlices(int[] A) {
 
 ## 分割整数
 
-### 1. 分割整数的最大乘积
+### 1. 分割整数后的最大乘积
 
 343\. Integer Break (Medim)
 
 [Leetcode](https://leetcode.com/problems/integer-break/description/) / [力扣](https://leetcode-cn.com/problems/integer-break/description/)
 
 题目描述：For example, given n = 2, return 1 (2 = 1 + 1); given n = 10, return 36 (10 = 3 + 3 + 4).
+
+动态规划：
+dp[n] = max(dp[n], max(i * (n-i), i * dp[n-i]));
+i 是遍历的下标。每次只拆分出一个 i 出来，不对 i 继续拆分，因为后续 n-i的差分中会包含对 i 的继续拆分
 
 ```java
 public int integerBreak(int n) {
@@ -355,7 +358,7 @@ public int integerBreak(int n) {
 }
 ```
 
-### 2. 按平方数来分割整数
+### 2. **按平方数来分割整数后的最少个数**
 
 279\. Perfect Squares(Medium)
 
@@ -392,7 +395,32 @@ private List<Integer> generateSquareList(int n) {
     return squareList;
 }
 ```
+### 2. **二进制字符串数组中一和零总个数满足条件的最大子集数**
 
+474\. Perfect Squares(Medium)
+
+[Leetcode](https://leetcode.com/problems/ones-and-zeroes/) / [力扣](https://leetcode-cn.com/problems/ones-and-zeroes/)
+
+题目描述：给你一个二进制字符串数组 strs 和两个整数 m 和 n 。
+
+请你找出并返回 strs 的最大子集的大小，该子集中 最多 有 m 个 0 和 n 个 1 
+
+```c++
+int findMaxForm(vector<string>& strs, int m, int n) {
+    vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+    for (const string& str: strs) {
+        int count0 = count_if(str.begin(), str.end(), [](char ch) {return ch == '0';});
+        int count1 = str.size() - count0;
+        for (int i(m); i >= count0; --i) {
+            for (int j(n); j >= count1; --j) {
+                dp[i][j] = max(dp[i][j], 1 + dp[i - count0][j - count1]);
+            }
+        }
+    } 
+    return dp[m][n];
+}
+}
+```
 ### 3. 分割整数构成字母字符串
 
 91\. Decode Ways (Medium)
