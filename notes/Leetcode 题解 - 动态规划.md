@@ -2,8 +2,8 @@
 <!-- GFM-TOC -->
 - [Leetcode 题解 - 动态规划](#leetcode-题解---动态规划)
   - [斐波那契数列](#斐波那契数列)
-    - [1. 爬楼梯](#1-爬楼梯)
-    - [2. 强盗抢劫](#2-强盗抢劫)
+    - [1. **爬楼梯**](#1-爬楼梯)
+    - [2. **强盗抢劫**](#2-强盗抢劫)
     - [3. 强盗在环形街区抢劫](#3-强盗在环形街区抢劫)
     - [4. 信件错排](#4-信件错排)
     - [5. 母牛生产](#5-母牛生产)
@@ -47,7 +47,7 @@
 
 ## 斐波那契数列
 
-### 1. 爬楼梯
+### 1. **爬楼梯**
 
 70\. Climbing Stairs (Easy)
 
@@ -65,22 +65,18 @@
 
 考虑到 dp[i] 只与 dp[i - 1] 和 dp[i - 2] 有关，因此可以只用两个变量来存储 dp[i - 1] 和 dp[i - 2]，使得原来的 O(N) 空间复杂度优化为 O(1) 复杂度。
 
-```java
-public int climbStairs(int n) {
-    if (n <= 2) {
-        return n;
+```c++
+int climbStairs(int n) {
+    vector<int> dp(n+1);
+    dp[0] = 1; dp[1] = 1;
+    for (int i = 2; i <= n; i++) {
+        dp[i] = dp[i-1] + dp[i-2];
     }
-    int pre2 = 1, pre1 = 2;
-    for (int i = 2; i < n; i++) {
-        int cur = pre1 + pre2;
-        pre2 = pre1;
-        pre1 = cur;
-    }
-    return pre1;
+    return dp[n];    
 }
 ```
 
-### 2. 强盗抢劫
+### 2. **强盗抢劫**
 
 198\. House Robber (Easy)
 
