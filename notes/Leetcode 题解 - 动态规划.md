@@ -19,13 +19,13 @@
     - [3. **二进制字符串数组中一和零总个数满足条件的最大子集数**](#3-二进制字符串数组中一和零总个数满足条件的最大子集数)
     - [4. **整数字符串解码个数**](#4-整数字符串解码个数)
   - [最长递增子序列](#最长递增子序列)
-    - [1. 最长递增子序列](#1-最长递增子序列)
+    - [1. **最长递增子序列**](#1-最长递增子序列)
     - [2. 一组整数对能够构成的最长链](#2-一组整数对能够构成的最长链)
     - [3. 最长摆动子序列](#3-最长摆动子序列)
   - [最长公共子序列](#最长公共子序列)
     - [1. 最长公共子序列](#1-最长公共子序列)
   - [0-1 背包](#0-1-背包)
-    - [1. 划分数组为和相等的两部分](#1-划分数组为和相等的两部分)
+    - [1. **划分数组为和相等的两部分**](#1-划分数组为和相等的两部分)
     - [2. 改变一组数的正负号使得它们的和为一给定数](#2-改变一组数的正负号使得它们的和为一给定数)
     - [3. 01 字符构成最多的字符串](#3-01-字符构成最多的字符串)
     - [4. 找零钱的最少硬币数](#4-找零钱的最少硬币数)
@@ -464,37 +464,24 @@ int numDecodings(string s) {
 
 对于一个长度为 N 的序列，最长递增子序列并不一定会以 S<sub>N</sub> 为结尾，因此 dp[N] 不是序列的最长递增子序列的长度，需要遍历 dp 数组找出最大值才是所要的结果，max{ dp[i] | 1 <= i <= N} 即为所求。
 
-### 1. 最长递增子序列
+### 1. **最长递增子序列**
 
 300\. Longest Increasing Subsequence (Medium)
 
 [Leetcode](https://leetcode.com/problems/longest-increasing-subsequence/description/) / [力扣](https://leetcode-cn.com/problems/longest-increasing-subsequence/description/)
 
-```java
-public int lengthOfLIS(int[] nums) {
-    int n = nums.length;
-    int[] dp = new int[n];
-    for (int i = 0; i < n; i++) {
-        int max = 1;
+```c++
+int lengthOfLIS(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> dp(n, 1);
+    for (int i = 1; i < n; i++) {
         for (int j = 0; j < i; j++) {
-            if (nums[i] > nums[j]) {
-                max = Math.max(max, dp[j] + 1);
-            }
+            if (nums[i] > nums[j])
+                dp[i] = max(dp[i], dp[j] + 1);
         }
-        dp[i] = max;
     }
-    return Arrays.stream(dp).max().orElse(0);
+    return *max_element(dp.begin(), dp.end());
 }
-```
-
-使用 Stream 求最大值会导致运行时间过长，可以改成以下形式：
-
-```java
-int ret = 0;
-for (int i = 0; i < n; i++) {
-    ret = Math.max(ret, dp[i]);
-}
-return ret;
 ```
 
 以上解法的时间复杂度为 O(N<sup>2</sup>)，可以使用二分查找将时间复杂度降低为 O(NlogN)。
@@ -710,7 +697,7 @@ public int knapsack(int W, int N, int[] weights, int[] values) {
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/9ae89f16-7905-4a6f-88a2-874b4cac91f4.jpg" width="300px"> </div><br>
 
-因为 dp[j-w] 表示 dp[i-1][j-w]，因此不能先求 dp[i][j-w]，防止将 dp[i-1][j-w] 覆盖。也就是说要先计算 dp[i][j] 再计算 dp[i][j-w]，在程序实现时需要按倒序来循环求解。
+因为 dp[j-w] 表示 dp[i-1][j-w]，因此不能先求 dp[i][j-w]，防止将 dp[i-1][j-w] 覆盖。也就是说要先计算 dp[i][j] 再计算 dp[i][j-w]，**空间优化后需要按倒序来循环求解**。
 
 ```java
 public int knapsack(int W, int N, int[] weights, int[] values) {
@@ -747,7 +734,7 @@ public int knapsack(int W, int N, int[] weights, int[] values) {
 
 - 其它：物品之间相互约束或者依赖
 
-### 1. 划分数组为和相等的两部分
+### 1. **划分数组为和相等的两部分**
 
 416\. Partition Equal Subset Sum (Medium)
 
@@ -762,30 +749,23 @@ Explanation: The array can be partitioned as [1, 5, 5] and [11].
 ```
 
 可以看成一个背包大小为 sum/2 的 0-1 背包问题。
+递推公式：dp[i][j] = dp[i-1][j] || dp[i-1][j-v];
+dp[i][j]表示前 i 个数是否存在和为 j
+空间压缩：dp[j] = dp[j] || dp[j-v] 逆序遍历
 
-```java
-public boolean canPartition(int[] nums) {
-    int sum = computeArraySum(nums);
-    if (sum % 2 != 0) {
-        return false;
-    }
-    int W = sum / 2;
-    boolean[] dp = new boolean[W + 1];
+```c++
+bool canPartition(vector<int>& nums) {
+    int total = accumulate(nums.begin(), nums.end(), 0);
+    if ((total & 1) == 1) return false;
+    total = total >> 1;
+    vector<bool> dp(total + 1, false);
     dp[0] = true;
-    for (int num : nums) {                 // 0-1 背包一个物品只能用一次
-        for (int i = W; i >= num; i--) {   // 从后往前，先计算 dp[i] 再计算 dp[i-num]
-            dp[i] = dp[i] || dp[i - num];
+    for (const auto& num : nums) {
+        for (int j = total; j >= num; j--) {
+            dp[j] = dp[j] || dp[j-num];
         }
     }
-    return dp[W];
-}
-
-private int computeArraySum(int[] nums) {
-    int sum = 0;
-    for (int num : nums) {
-        sum += num;
-    }
-    return sum;
+    return dp[total];
 }
 ```
 
