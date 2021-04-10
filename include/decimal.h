@@ -1,11 +1,12 @@
+#ifndef MY_DECIMAL_H
+#define MY_DECIMAL_H
 #include <string>
 #include <algorithm>
-
 // std::string ten2n(int dec, int n = 10);
 // int n2ten(std::string nec, int n = 10); 
 // stoi(nec, nullptr, n);
 
-std::string ten2n(int dec, int n = 10) 
+std::string ten2n(unsigned int dec, int n = 10)
 {
 	std::string ans="";
 	do{
@@ -13,14 +14,15 @@ std::string ten2n(int dec, int n = 10)
 		if(t>=0&&t<=9)	ans+=t+'0';
 		else ans+=t-10+'a';
 		dec/=n;
-	}while(dec!=0);	//使用do{}while（）以防止输入为0的情况
+	}while(dec!=0);
+
 	std::reverse(ans.begin(),ans.end());
-	return ans;	
+	return ans;
 }
 
-int n2ten(std::string nec, int n = 10) 
+unsigned int n2ten(std::string nec, int n = 10)
 {
-	int ans=0;
+	unsigned int ans=0;
 	for(int i=0;i<nec.size();i++)
 	{
 		char t=nec[i];
@@ -29,3 +31,10 @@ int n2ten(std::string nec, int n = 10)
 	}
 	return ans;
 }
+
+std::string n2n(std::string nec, int n, int d) 
+{
+	return ten2n(n2ten(nec, n), d);
+}
+
+#endif // MY_DECIMAL_H
