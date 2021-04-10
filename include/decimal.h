@@ -1,8 +1,8 @@
 #include <string>
 #include <algorithm>
 
-std::string ten2n(int dec, int n = 10);
-int n2ten(std::string nec, int n = 10); 
+// std::string ten2n(int dec, int n = 10);
+// int n2ten(std::string nec, int n = 10); 
 // stoi(nec, nullptr, n);
 
 std::string ten2n(int dec, int n = 10) 
