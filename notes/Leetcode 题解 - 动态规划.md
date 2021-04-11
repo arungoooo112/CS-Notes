@@ -28,7 +28,7 @@
     - [1. **划分数组为和相等的两部分**](#1-划分数组为和相等的两部分)
     - [2. 改变一组数的正负号使得它们的和为一给定数](#2-改变一组数的正负号使得它们的和为一给定数)
     - [3. 01 字符构成最多的字符串](#3-01-字符构成最多的字符串)
-    - [4. 找零钱的最少硬币数](#4-找零钱的最少硬币数)
+    - [4. **找零钱的最少硬币数**](#4-找零钱的最少硬币数)
     - [5. 找零钱的硬币数组合](#5-找零钱的硬币数组合)
     - [6. 字符串按单词列表分割](#6-字符串按单词列表分割)
     - [7. 组合总和](#7-组合总和)
@@ -883,7 +883,7 @@ public int findMaxForm(String[] strs, int m, int n) {
 }
 ```
 
-### 4. 找零钱的最少硬币数
+### 4. **找零钱的最少硬币数**
 
 322\. Coin Change (Medium)
 
@@ -905,23 +905,16 @@ return -1.
    M(i) = min{M(i - j) | j in coins, M(j) >= 0} + 1;
 
 ```C++
- int coinChange(vector<int>& coins, int amount) {
-     vector<int> count(amount + 1, 0);
-     return dp(coins, amount, count);
- }
- int dp(const vector<int>& coins, int amount, vector<int>& count ) {
-     if (amount < 0) return -1;
-     if (amount == 0) return count[0] = 0;
-     if (count[amount] != 0) return count[amount];
-     int ans = INT_MAX;
-     for (const int& a : coins) {
-         int na = dp(coins, amount - a, count);
-         if (na != -1 && na < ans) 
-             ans = na + 1;
-     }
-     return count[amount] = (ans == INT_MAX) ? -1 : ans;
- }
-}
+    int coinChange(vector<int>& coins, int amount) {
+        if (amount == 0) return 0;
+        vector<int> dp(amount+1, INT_MAX);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) 
+            for (const auto& a : coins) 
+                if (i >= a) 
+                    dp[i] = min(dp[i], dp[i-a] + 1);
+        return dp[amount] == INT_MAX ? - 1 : dp[amount];
+    }
 ```
 
 ### 5. 找零钱的硬币数组合
